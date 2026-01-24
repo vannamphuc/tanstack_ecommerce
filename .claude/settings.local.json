@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm db:generate:*)",
+      "Bash(pnpm db generate:*)",
+      "Bash(pnpm db:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm ui add:*)",
+      "Bash(pnpm db:seed:*)",
+      "Bash(pnpm check-types:*)"
+    ]
+  }
+}

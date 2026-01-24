@@ -16,6 +16,8 @@ import appCss from "~/styles.css?url";
 
 import { ThemeProvider } from "~/components/theme-provider";
 import { Toaster } from "~/components/ui/sonner";
+import { SiteHeader } from "~/components/layout/site-header";
+import { SiteFooter } from "~/components/layout/site-footer";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -69,7 +71,11 @@ function RootDocument({ children }: { readonly children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider>
-          {children}
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
+            <main className="flex-1">{children}</main>
+            <SiteFooter />
+          </div>
           <Toaster richColors />
         </ThemeProvider>
 
