@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { nanoid } from "nanoid";
 import { db } from "./index";
-import { category, product, productImage } from "./schema";
+import { cartItem, category, order, orderItem, product, productImage } from "./schema";
 
 // Helper to create slug from name
 function createSlug(name: string): string {
@@ -15,8 +15,11 @@ async function seed() {
   console.log("🌱 Seeding database...");
 
   try {
-    // Clear existing data
+    // Clear existing data (order matters for FK constraints)
     console.log("Clearing existing data...");
+    await db.delete(orderItem);
+    await db.delete(order);
+    await db.delete(cartItem);
     await db.delete(productImage);
     await db.delete(product);
     await db.delete(category);
