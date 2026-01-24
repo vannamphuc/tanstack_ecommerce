@@ -21,9 +21,8 @@ export function SignOutButton() {
         });
       }}
       type="button"
-      className="w-fit"
+      className="w-full"
       variant="destructive"
-      size="lg"
     >
       Sign out
     </Button>

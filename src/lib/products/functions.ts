@@ -5,30 +5,58 @@ import { db } from "~/lib/db";
 import { category, product, productImage } from "~/lib/db/schema";
 
 /**
- * Get all products with optional category filter
+ * Get products with pagination and optional category filter
  */
 export const $getProducts = createServerFn({ method: "GET" })
   .inputValidator(
     z
       .object({
         categoryId: z.string().optional(),
+        page: z.number().int().min(1).default(1),
+        limit: z.number().int().min(1).max(100).default(12),
       })
       .optional(),
   )
   .handler(async ({ data }) => {
-    const products = await db.query.product.findMany({
-      where: data?.categoryId ? eq(product.categoryId, data.categoryId) : undefined,
-      with: {
-        category: true,
-        images: {
-          orderBy: [asc(productImage.order)],
-          limit: 1, // Get only the first image for listing
-        },
-      },
-      orderBy: [desc(product.createdAt)],
-    });
+    const page = data?.page ?? 1;
+    const limit = data?.limit ?? 12;
+    const offset = (page - 1) * limit;
 
-    return products;
+    const [products, totalCount] = await Promise.all([
+      db.query.product.findMany({
+        where: data?.categoryId ? eq(product.categoryId, data.categoryId) : undefined,
+        with: {
+          category: true,
+          images: {
+            orderBy: [asc(productImage.order)],
+            limit: 1, // Get only the first image for listing
+          },
+        },
+        orderBy: [desc(product.createdAt)],
+        limit,
+        offset,
+      }),
+      db.query.product.findMany({
+        where: data?.categoryId ? eq(product.categoryId, data.categoryId) : undefined,
+        columns: {
+          id: true,
+        },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(totalCount.length / limit);
+
+    return {
+      products,
+      pagination: {
+        page,
+        limit,
+        totalCount: totalCount.length,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    };
   });
 
 /**

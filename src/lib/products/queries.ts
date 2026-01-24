@@ -12,11 +12,11 @@ import { CATEGORY_QUERY_KEYS, PRODUCT_QUERY_KEYS } from "../queries/query-keys";
  */
 
 // Products list query options
-export const createProductsQueryOptions = (categoryId?: string) =>
+export const createProductsQueryOptions = (categoryId?: string, page: number = 1, limit: number = 12) =>
   queryOptions({
-    queryKey: PRODUCT_QUERY_KEYS.byCategory(categoryId),
+    queryKey: PRODUCT_QUERY_KEYS.byCategory(categoryId, page, limit),
     queryFn: ({ signal }) =>
-      $getProducts({ data: categoryId ? { categoryId } : undefined, signal }),
+      $getProducts({ data: { categoryId, page, limit }, signal }),
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 30, // 30 minutes
   });
@@ -52,8 +52,8 @@ export const createFeaturedProductsQueryOptions = () =>
  * Custom Hooks - Suspense versions (use with prefetch in loader)
  */
 
-export const useProductsSuspense = (categoryId?: string) => {
-  return useSuspenseQuery(createProductsQueryOptions(categoryId));
+export const useProductsSuspense = (categoryId?: string, page: number = 1, limit: number = 12) => {
+  return useSuspenseQuery(createProductsQueryOptions(categoryId, page, limit));
 };
 
 export const useProductSuspense = (id: string) => {
@@ -72,8 +72,8 @@ export const useFeaturedProductsSuspense = () => {
  * Custom Hooks - Non-suspense versions (for conditional/lazy fetching)
  */
 
-export const useProducts = (categoryId?: string) => {
-  return useQuery(createProductsQueryOptions(categoryId));
+export const useProducts = (categoryId?: string, page: number = 1, limit: number = 12) => {
+  return useQuery(createProductsQueryOptions(categoryId, page, limit));
 };
 
 export const useProduct = (id: string) => {

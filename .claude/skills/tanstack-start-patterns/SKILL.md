@@ -6,8 +6,8 @@ description: |
   Helps with: Server functions, data fetching, route protection, form validation, mutations, SSR.
   Solves: Type-safe full-stack development patterns.
 author: Claude Code
-version: 1.1.0
-date: 2025-01-24
+version: 1.2.0
+date: 2025-01-25
 ---
 
 # TanStack Start Full-Stack Patterns
@@ -1052,53 +1052,70 @@ function RootLayout() {
 
 ## 11. TanStack Form
 
-### Basic Form with Zod Validation
+### Field Components (shadcn/ui)
+
+Install field components via shadcn CLI:
+
+```bash
+npx shadcn@latest add field
+```
+
+This adds `src/components/ui/field.tsx` with `Field`, `FieldGroup`, `FieldLabel`, `FieldError`, `FieldDescription` components.
+
+### Basic Form Pattern with Field Components
 
 ```typescript
-// src/components/auth/login-form.tsx
+// src/routes/_auth/checkout/index.tsx
 import { useForm } from "@tanstack/react-form";
+import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "@tanstack/react-router";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Field, FieldError, FieldGroup, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import authClient from "~/lib/auth/auth-client";
+import { useCreateOrder } from "~/lib/orders/queries";
 
-const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+const checkoutSchema = z.object({
+  fullName: z.string().min(2, "Full name must be at least 2 characters"),
+  street: z.string().min(5, "Street address must be at least 5 characters"),
+  city: z.string().min(2, "City must be at least 2 characters"),
+  state: z.string().length(2, "State must be 2 characters"),
+  postalCode: z.string().regex(/^\d{5}(-\d{4})?$/, "Invalid postal code format"),
+  phone: z.string().regex(/^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/, "Invalid phone number"),
+  saveAddress: z.boolean(),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-
-export function LoginForm() {
-  const router = useRouter();
-
-  const loginMutation = useMutation({
-    mutationFn: async (values: LoginFormValues) => {
-      const result = await authClient.signIn.email(values);
-      if (result.error) {
-        throw new Error(result.error.message);
-      }
-      return result.data;
-    },
-    onSuccess: () => {
-      router.navigate({ to: "/dashboard" });
-    },
-  });
+export function CheckoutForm() {
+  const navigate = useNavigate();
+  const createOrderMutation = useCreateOrder();
 
   const form = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      fullName: "",
+      street: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      phone: "",
+      saveAddress: false,
     },
     validators: {
-      // Validate on submit (recommended for login)
-      onSubmit: loginSchema,
+      onSubmit: checkoutSchema, // Validate only on submit
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value);
+      const result = await createOrderMutation.mutateAsync({
+        shippingAddress: {
+          fullName: value.fullName,
+          street: value.street,
+          city: value.city,
+          state: value.state.toUpperCase(),
+          postalCode: value.postalCode,
+          country: "US",
+          phone: value.phone,
+        },
+        saveAddress: value.saveAddress,
+      });
+      navigate({ to: "/orders/$orderId/confirmation", params: { orderId: result.id } });
     },
   });
 
@@ -1106,123 +1123,153 @@ export function LoginForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        e.stopPropagation();
         form.handleSubmit();
       }}
-      className="space-y-4"
     >
-      <form.Field
-        name="email"
-        children={(field) => {
-          const hasError =
-            field.state.meta.isTouched &&
-            field.state.meta.errors.length > 0;
+      <FieldGroup>
+        {/* Text Input Field Pattern */}
+        <form.Field
+          name="fullName"
+          children={(field) => {
+            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>
+                  Full Name <span className="text-destructive">*</span>
+                </FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  aria-invalid={isInvalid}
+                  placeholder="John Doe"
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        />
 
-          return (
-            <div className="space-y-2">
-              <Label htmlFor={field.name}>Email</Label>
-              <Input
+        {/* Grid Layout for Side-by-Side Fields */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <form.Field
+            name="city"
+            children={(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    City <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    aria-invalid={isInvalid}
+                    placeholder="New York"
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          />
+
+          <form.Field
+            name="state"
+            children={(field) => {
+              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <Field data-invalid={isInvalid}>
+                  <FieldLabel htmlFor={field.name}>
+                    State <span className="text-destructive">*</span>
+                  </FieldLabel>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value.toUpperCase())}
+                    aria-invalid={isInvalid}
+                    placeholder="NY"
+                    maxLength={2}
+                  />
+                  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+                </Field>
+              );
+            }}
+          />
+        </div>
+
+        {/* Checkbox Field Pattern */}
+        <form.Field
+          name="saveAddress"
+          children={(field) => (
+            <div className="flex items-center space-x-2">
+              <Checkbox
                 id={field.name}
-                type="email"
-                placeholder="you@example.com"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
-                aria-invalid={hasError}
-                aria-describedby={hasError ? `${field.name}-error` : undefined}
+                checked={field.state.value}
+                onCheckedChange={(checked) => field.handleChange(checked === true)}
               />
-              {hasError && (
-                <p
-                  id={`${field.name}-error`}
-                  className="text-sm text-destructive"
-                >
-                  {field.state.meta.errors[0]?.message}
-                </p>
-              )}
+              <FieldLabel htmlFor={field.name} className="cursor-pointer font-normal">
+                Save this address for future orders
+              </FieldLabel>
             </div>
-          );
-        }}
-      />
+          )}
+        />
+      </FieldGroup>
 
-      <form.Field
-        name="password"
-        children={(field) => {
-          const hasError =
-            field.state.meta.isTouched &&
-            field.state.meta.errors.length > 0;
-
-          return (
-            <div className="space-y-2">
-              <Label htmlFor={field.name}>Password</Label>
-              <Input
-                id={field.name}
-                type="password"
-                placeholder="Enter your password"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
-                aria-invalid={hasError}
-              />
-              {hasError && (
-                <p className="text-sm text-destructive">
-                  {field.state.meta.errors[0]?.message}
-                </p>
-              )}
-            </div>
-          );
-        }}
-      />
-
-      {/* Display server error */}
-      {loginMutation.error && (
-        <p className="text-sm text-destructive">
-          {loginMutation.error.message}
-        </p>
+      {/* Form-level error display */}
+      {form.state.errors.length > 0 && (
+        <div className="bg-destructive/10 text-destructive mt-4 rounded-md p-3">
+          <p className="text-sm font-medium">Please fix the errors above before submitting.</p>
+        </div>
       )}
 
-      {/* Submit button with loading state */}
-      <form.Subscribe
-        selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={!canSubmit || isSubmitting || loginMutation.isPending}
-          >
-            {isSubmitting || loginMutation.isPending
-              ? "Logging in..."
-              : "Login"}
-          </Button>
-        )}
-      />
+      <Button type="submit" disabled={createOrderMutation.isPending} className="mt-6">
+        {createOrderMutation.isPending ? "Placing Order..." : "Place Order"}
+      </Button>
     </form>
   );
 }
 ```
 
-### Form with Server-Side Error Handling
+### Key Patterns Summary
 
 ```typescript
-// Handle API validation errors and set them on specific fields
-const form = useForm({
-  defaultValues: { email: "", password: "" },
-  validators: { onSubmit: loginSchema },
-  onSubmit: async ({ value }) => {
-    try {
-      await loginMutation.mutateAsync(value);
-    } catch (error) {
-      // Handle field-specific errors from server
-      if (error instanceof ApiError && error.fieldErrors) {
-        Object.entries(error.fieldErrors).forEach(([field, message]) => {
-          form.setFieldMeta(field as keyof typeof value, (prev) => ({
-            ...prev,
-            errors: [{ message }],
-          }));
-        });
-      }
-      throw error; // Re-throw for form.Subscribe error display
-    }
-  },
-});
+// 1. Validation check pattern
+const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+
+// 2. Field structure
+<Field data-invalid={isInvalid}>
+  <FieldLabel htmlFor={field.name}>Label</FieldLabel>
+  <Input
+    id={field.name}
+    name={field.name}
+    value={field.state.value}
+    onBlur={field.handleBlur}
+    onChange={(e) => field.handleChange(e.target.value)}
+    aria-invalid={isInvalid}
+  />
+  {isInvalid && <FieldError errors={field.state.meta.errors} />}
+</Field>
+
+// 3. Form submission
+<form onSubmit={(e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  form.handleSubmit();
+}}>
+
+// 4. Checkbox with radix-ui pattern
+<Checkbox
+  checked={field.state.value}
+  onCheckedChange={(checked) => field.handleChange(checked === true)}
+/>
 ```
 
 ### Array Fields (Dynamic Forms)
@@ -1231,6 +1278,7 @@ const form = useForm({
 // src/components/order/order-items-form.tsx
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
+import { Field, FieldError, FieldGroup, FieldLabel } from "~/components/ui/field";
 
 const orderItemSchema = z.object({
   productId: z.string().min(1),
@@ -1259,36 +1307,44 @@ export function OrderItemsForm() {
     <form onSubmit={(e) => { e.preventDefault(); form.handleSubmit(); }}>
       <form.Field name="items" mode="array">
         {(field) => (
-          <div className="space-y-4">
+          <FieldGroup>
             {field.state.value.map((_, index) => (
               <div key={index} className="flex gap-4 items-end">
-                <form.Field name={`items[${index}].productId`}>
-                  {(subField) => (
-                    <div>
-                      <Label>Product</Label>
-                      <ProductSelect
-                        value={subField.state.value}
-                        onChange={subField.handleChange}
-                      />
-                    </div>
-                  )}
-                </form.Field>
+                <form.Field
+                  name={`items[${index}].productId`}
+                  children={(subField) => {
+                    const isInvalid = subField.state.meta.isTouched && !subField.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel>Product</FieldLabel>
+                        <ProductSelect
+                          value={subField.state.value}
+                          onChange={subField.handleChange}
+                        />
+                        {isInvalid && <FieldError errors={subField.state.meta.errors} />}
+                      </Field>
+                    );
+                  }}
+                />
 
-                <form.Field name={`items[${index}].quantity`}>
-                  {(subField) => (
-                    <div>
-                      <Label>Quantity</Label>
-                      <Input
-                        type="number"
-                        min={1}
-                        value={subField.state.value}
-                        onChange={(e) =>
-                          subField.handleChange(Number(e.target.value))
-                        }
-                      />
-                    </div>
-                  )}
-                </form.Field>
+                <form.Field
+                  name={`items[${index}].quantity`}
+                  children={(subField) => {
+                    const isInvalid = subField.state.meta.isTouched && !subField.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid}>
+                        <FieldLabel>Quantity</FieldLabel>
+                        <Input
+                          type="number"
+                          min={1}
+                          value={subField.state.value}
+                          onChange={(e) => subField.handleChange(Number(e.target.value))}
+                        />
+                        {isInvalid && <FieldError errors={subField.state.meta.errors} />}
+                      </Field>
+                    );
+                  }}
+                />
 
                 <Button
                   type="button"
@@ -1305,13 +1361,11 @@ export function OrderItemsForm() {
             <Button
               type="button"
               variant="outline"
-              onClick={() =>
-                field.pushValue({ productId: "", quantity: 1, notes: "" })
-              }
+              onClick={() => field.pushValue({ productId: "", quantity: 1, notes: "" })}
             >
               Add Item
             </Button>
-          </div>
+          </FieldGroup>
         )}
       </form.Field>
 

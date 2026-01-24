@@ -115,6 +115,50 @@ async function seed() {
               "https://images.unsplash.com/photo-1592286927505-b32e1d7d0f6f?w=800&h=800&fit=crop",
             ],
           },
+          {
+            name: "USB-C Charging Hub",
+            description:
+              "Multi-port USB-C charging hub with 7 ports including HDMI, USB 3.0, and SD card reader. Compact and portable design.",
+            price: "49.99",
+            stock: 78,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Wireless Gaming Mouse",
+            description:
+              "High-precision gaming mouse with adjustable DPI settings, long battery life, and ergonomic design. Zero lag connection.",
+            price: "59.99",
+            stock: 56,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1527814050087-3793815479db?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Portable SSD 1TB",
+            description:
+              "Fast external solid-state drive with 1TB storage capacity. USB-C connection for quick transfers. Compact and durable.",
+            price: "129.99",
+            stock: 34,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Laptop Stand Aluminum",
+            description:
+              "Premium aluminum laptop stand with adjustable height. Compatible with all laptop sizes. Improves posture and cooling.",
+            price: "39.99",
+            stock: 92,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&h=800&fit=crop",
+            ],
+          },
         ],
       },
       // Clothing
@@ -164,6 +208,50 @@ async function seed() {
             images: [
               "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&h=800&fit=crop",
               "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Slim Fit Jeans",
+            description:
+              "Modern slim fit jeans with stretch fabric for comfort. Classic blue wash that pairs well with any top. Flattering cut for all body types.",
+            price: "79.99",
+            stock: 68,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1542272604-787c62d465d1?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Casual Sneakers White",
+            description:
+              "Versatile white canvas sneakers perfect for everyday wear. Comfortable cushioned sole and durable construction. Goes with everything.",
+            price: "69.99",
+            stock: 89,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1549928314-cd4628902d4a?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Summer Shorts Collection",
+            description:
+              "Pack of 2 lightweight summer shorts in neutral colors. Quick-dry fabric perfect for warm weather activities and vacation.",
+            price: "59.99",
+            stock: 73,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Cozy Sweater Cardigan",
+            description:
+              "Soft knit cardigan perfect for layering. Available in multiple colors. Comfortable for casual wear or office settings.",
+            price: "89.99",
+            stock: 41,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1573448912642-25f00534efcb?w=800&h=800&fit=crop",
             ],
           },
         ],
@@ -216,6 +304,50 @@ async function seed() {
               "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=800&fit=crop",
             ],
           },
+          {
+            name: "Cozy Area Rug",
+            description:
+              "Soft and plush area rug with natural wool blend. Machine washable. Perfect for adding warmth and texture to any room.",
+            price: "199.99",
+            stock: 19,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1544456537-b2b3eae5f580?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Bamboo Cutting Board Set",
+            description:
+              "Set of 3 sustainable bamboo cutting boards in different sizes. Naturally antibacterial and easy to maintain.",
+            price: "44.99",
+            stock: 107,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1577003832033-a16944d46bba?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Garden Tool Kit",
+            description:
+              "Complete 12-piece garden tool set for all your gardening needs. Ergonomic handles and stainless steel blades. Includes carrying bag.",
+            price: "89.99",
+            stock: 31,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1584622181563-430f63602d4b?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Marble Soap Dispenser",
+            description:
+              "Elegant marble bathroom accessory with stainless steel pump. Adds a luxury touch to any bathroom or kitchen counter.",
+            price: "34.99",
+            stock: 54,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=800&h=800&fit=crop",
+            ],
+          },
         ],
       },
       // Books
@@ -264,6 +396,50 @@ async function seed() {
             featured: false,
             images: [
               "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Digital Marketing Strategies",
+            description:
+              "Essential guide to modern digital marketing. Learn SEO, content marketing, social media, and analytics. Real-world case studies included.",
+            price: "59.99",
+            stock: 43,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Culinary Arts Masterclass",
+            description:
+              "Learn professional cooking techniques from world-class chefs. Includes 200+ recipes and beautiful food photography throughout.",
+            price: "69.99",
+            stock: 29,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1507842072343-583f20270319?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "The Science of Happiness",
+            description:
+              "Evidence-based strategies for living a more fulfilled and joyful life. Based on decades of psychological research and studies.",
+            price: "34.99",
+            stock: 76,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1507842072343-583f20270319?w=800&h=800&fit=crop",
+            ],
+          },
+          {
+            name: "Business Excellence Handbook",
+            description:
+              "Leadership strategies and business practices from successful entrepreneurs. Build your skills and grow your business.",
+            price: "54.99",
+            stock: 51,
+            featured: false,
+            images: [
+              "https://images.unsplash.com/photo-1507842072343-583f20270319?w=800&h=800&fit=crop",
             ],
           },
         ],

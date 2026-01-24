@@ -29,8 +29,11 @@ function SignupForm() {
           onError: ({ error }) => {
             toast.error(error.message || "An error occurred while signing up.");
           },
-          onSuccess: () => {
-            queryClient.removeQueries({ queryKey: authQueryOptions().queryKey });
+          onSuccess: async () => {
+            // Invalidate instead of remove - triggers automatic refetch
+            // removeQueries() deletes cache without fetching new data
+            // invalidateQueries() marks stale and auto-refetches on next use
+            await queryClient.invalidateQueries({ queryKey: authQueryOptions().queryKey });
             navigate({ to: redirectUrl });
           },
         },

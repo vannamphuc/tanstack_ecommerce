@@ -14,6 +14,7 @@ import {
 // Search params schema
 const productSearchSchema = z.object({
   category: z.string().optional(),
+  page: z.number().int().min(1).default(1),
 });
 
 export const Route = createFileRoute("/products/")({
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/products/")({
   loaderDeps: ({ search }) => ({ search }),
   loader: ({ context: { queryClient }, deps: { search } }) => {
     // Prefetch products and categories in parallel
-    queryClient.prefetchQuery(createProductsQueryOptions(search.category));
+    queryClient.prefetchQuery(createProductsQueryOptions(search.category, search.page));
     queryClient.prefetchQuery(createCategoriesQueryOptions());
   },
   pendingComponent: () => (
@@ -36,8 +37,27 @@ export const Route = createFileRoute("/products/")({
 });
 
 function ProductsPage() {
-  const { category } = Route.useSearch();
+  const { category, page } = Route.useSearch();
   const navigate = Route.useNavigate();
+
+  const handlePageChange = (newPage: number) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        page: newPage,
+      }),
+    });
+  };
+
+  const handleCategoryChange = (newCategoryId: string | undefined) => {
+    navigate({
+      search: (prev) => ({
+        ...prev,
+        category: newCategoryId,
+        page: 1, // Reset to first page when category changes
+      }),
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -49,14 +69,9 @@ function ProductsPage() {
       <Suspense fallback={<ProductListSkeleton />}>
         <ProductListContent
           categoryId={category}
-          onCategoryChange={(newCategoryId) => {
-            navigate({
-              search: (prev) => ({
-                ...prev,
-                category: newCategoryId,
-              }),
-            });
-          }}
+          page={page}
+          onCategoryChange={handleCategoryChange}
+          onPageChange={handlePageChange}
         />
       </Suspense>
     </div>
@@ -65,11 +80,18 @@ function ProductsPage() {
 
 interface ProductListContentProps {
   categoryId?: string;
+  page: number;
   onCategoryChange: (categoryId: string | undefined) => void;
+  onPageChange: (page: number) => void;
 }
 
-function ProductListContent({ categoryId, onCategoryChange }: ProductListContentProps) {
-  const { data: products } = useProductsSuspense(categoryId);
+function ProductListContent({
+  categoryId,
+  page,
+  onCategoryChange,
+  onPageChange,
+}: ProductListContentProps) {
+  const { data } = useProductsSuspense(categoryId, page);
   const { data: categories } = useCategoriesSuspense();
 
   return (
@@ -79,7 +101,44 @@ function ProductListContent({ categoryId, onCategoryChange }: ProductListContent
         selectedCategoryId={categoryId}
         onCategoryChange={onCategoryChange}
       />
-      <ProductGrid products={products} />
+      <ProductGrid products={data.products} />
+
+      {/* Pagination Controls */}
+      {data.pagination.totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <button
+            onClick={() => onPageChange(data.pagination.page - 1)}
+            disabled={!data.pagination.hasPrevPage}
+            className="rounded-md border px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted"
+          >
+            Previous
+          </button>
+
+          <div className="flex items-center gap-1">
+            {Array.from({ length: data.pagination.totalPages }, (_, i) => i + 1).map((p) => (
+              <button
+                key={p}
+                onClick={() => onPageChange(p)}
+                className={`rounded-md px-3 py-2 transition-colors ${
+                  p === data.pagination.page
+                    ? "bg-primary text-primary-foreground"
+                    : "border hover:bg-muted"
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => onPageChange(data.pagination.page + 1)}
+            disabled={!data.pagination.hasNextPage}
+            className="rounded-md border px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </>
   );
 }

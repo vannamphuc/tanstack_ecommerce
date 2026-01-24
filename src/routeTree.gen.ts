@@ -16,9 +16,7 @@ import { Route as ProductsIndexRouteImport } from './routes/products/index'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId'
 import { Route as GuestSignupRouteImport } from './routes/_guest/signup'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
-import { Route as AuthDashboardRouteRouteImport } from './routes/_auth/dashboard/route'
 import { Route as AuthOrdersIndexRouteImport } from './routes/_auth/orders/index'
-import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
 import { Route as AuthCheckoutIndexRouteImport } from './routes/_auth/checkout/index'
 import { Route as AuthCartIndexRouteImport } from './routes/_auth/cart/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -58,20 +56,10 @@ const GuestLoginRoute = GuestLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => GuestRouteRoute,
 } as any)
-const AuthDashboardRouteRoute = AuthDashboardRouteRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
 const AuthOrdersIndexRoute = AuthOrdersIndexRouteImport.update({
   id: '/orders/',
   path: '/orders/',
   getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthDashboardRouteRoute,
 } as any)
 const AuthCheckoutIndexRoute = AuthCheckoutIndexRouteImport.update({
   id: '/checkout/',
@@ -102,7 +90,6 @@ const AuthOrdersOrderIdConfirmationRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof AuthDashboardRouteRouteWithChildren
   '/login': typeof GuestLoginRoute
   '/signup': typeof GuestSignupRoute
   '/products/$productId': typeof ProductsProductIdRoute
@@ -110,7 +97,6 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/cart/': typeof AuthCartIndexRoute
   '/checkout/': typeof AuthCheckoutIndexRoute
-  '/dashboard/': typeof AuthDashboardIndexRoute
   '/orders/': typeof AuthOrdersIndexRoute
   '/orders/$orderId/confirmation': typeof AuthOrdersOrderIdConfirmationRoute
   '/orders/$orderId/': typeof AuthOrdersOrderIdIndexRoute
@@ -124,7 +110,6 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/cart': typeof AuthCartIndexRoute
   '/checkout': typeof AuthCheckoutIndexRoute
-  '/dashboard': typeof AuthDashboardIndexRoute
   '/orders': typeof AuthOrdersIndexRoute
   '/orders/$orderId/confirmation': typeof AuthOrdersOrderIdConfirmationRoute
   '/orders/$orderId': typeof AuthOrdersOrderIdIndexRoute
@@ -134,7 +119,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
   '/_guest': typeof GuestRouteRouteWithChildren
-  '/_auth/dashboard': typeof AuthDashboardRouteRouteWithChildren
   '/_guest/login': typeof GuestLoginRoute
   '/_guest/signup': typeof GuestSignupRoute
   '/products/$productId': typeof ProductsProductIdRoute
@@ -142,7 +126,6 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/cart/': typeof AuthCartIndexRoute
   '/_auth/checkout/': typeof AuthCheckoutIndexRoute
-  '/_auth/dashboard/': typeof AuthDashboardIndexRoute
   '/_auth/orders/': typeof AuthOrdersIndexRoute
   '/_auth/orders/$orderId/confirmation': typeof AuthOrdersOrderIdConfirmationRoute
   '/_auth/orders/$orderId/': typeof AuthOrdersOrderIdIndexRoute
@@ -151,7 +134,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/dashboard'
     | '/login'
     | '/signup'
     | '/products/$productId'
@@ -159,7 +141,6 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/cart/'
     | '/checkout/'
-    | '/dashboard/'
     | '/orders/'
     | '/orders/$orderId/confirmation'
     | '/orders/$orderId/'
@@ -173,7 +154,6 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/cart'
     | '/checkout'
-    | '/dashboard'
     | '/orders'
     | '/orders/$orderId/confirmation'
     | '/orders/$orderId'
@@ -182,7 +162,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_auth'
     | '/_guest'
-    | '/_auth/dashboard'
     | '/_guest/login'
     | '/_guest/signup'
     | '/products/$productId'
@@ -190,7 +169,6 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/_auth/cart/'
     | '/_auth/checkout/'
-    | '/_auth/dashboard/'
     | '/_auth/orders/'
     | '/_auth/orders/$orderId/confirmation'
     | '/_auth/orders/$orderId/'
@@ -256,26 +234,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRouteRoute
     }
-    '/_auth/dashboard': {
-      id: '/_auth/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthDashboardRouteRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
     '/_auth/orders/': {
       id: '/_auth/orders/'
       path: '/orders'
       fullPath: '/orders/'
       preLoaderRoute: typeof AuthOrdersIndexRouteImport
       parentRoute: typeof AuthRouteRoute
-    }
-    '/_auth/dashboard/': {
-      id: '/_auth/dashboard/'
-      path: '/'
-      fullPath: '/dashboard/'
-      preLoaderRoute: typeof AuthDashboardIndexRouteImport
-      parentRoute: typeof AuthDashboardRouteRoute
     }
     '/_auth/checkout/': {
       id: '/_auth/checkout/'
@@ -315,19 +279,7 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AuthDashboardRouteRouteChildren {
-  AuthDashboardIndexRoute: typeof AuthDashboardIndexRoute
-}
-
-const AuthDashboardRouteRouteChildren: AuthDashboardRouteRouteChildren = {
-  AuthDashboardIndexRoute: AuthDashboardIndexRoute,
-}
-
-const AuthDashboardRouteRouteWithChildren =
-  AuthDashboardRouteRoute._addFileChildren(AuthDashboardRouteRouteChildren)
-
 interface AuthRouteRouteChildren {
-  AuthDashboardRouteRoute: typeof AuthDashboardRouteRouteWithChildren
   AuthCartIndexRoute: typeof AuthCartIndexRoute
   AuthCheckoutIndexRoute: typeof AuthCheckoutIndexRoute
   AuthOrdersIndexRoute: typeof AuthOrdersIndexRoute
@@ -336,7 +288,6 @@ interface AuthRouteRouteChildren {
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthDashboardRouteRoute: AuthDashboardRouteRouteWithChildren,
   AuthCartIndexRoute: AuthCartIndexRoute,
   AuthCheckoutIndexRoute: AuthCheckoutIndexRoute,
   AuthOrdersIndexRoute: AuthOrdersIndexRoute,

@@ -9,7 +9,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { authQueryOptions } from "~/lib/auth/queries";
@@ -78,11 +77,6 @@ export function SiteHeader() {
                 {user.name}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link to="/dashboard">Dashboard</Link>
-                </DropdownMenuItem>
-                {/* Orders will be added in Phase 3 */}
-                <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <SignOutButton />
                 </DropdownMenuItem>
