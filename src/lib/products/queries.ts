@@ -1,6 +1,10 @@
-import { queryOptions } from "@tanstack/react-query";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { $getProducts, $getProduct, $getCategories, $getFeaturedProducts } from "../products/functions";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  $getCategories,
+  $getFeaturedProducts,
+  $getProduct,
+  $getProducts,
+} from "../products/functions";
 import { CATEGORY_QUERY_KEYS, PRODUCT_QUERY_KEYS } from "../queries/query-keys";
 
 /**
@@ -11,7 +15,8 @@ import { CATEGORY_QUERY_KEYS, PRODUCT_QUERY_KEYS } from "../queries/query-keys";
 export const createProductsQueryOptions = (categoryId?: string) =>
   queryOptions({
     queryKey: PRODUCT_QUERY_KEYS.byCategory(categoryId),
-    queryFn: ({ signal }) => $getProducts({ data: categoryId ? { categoryId } : undefined, signal }),
+    queryFn: ({ signal }) =>
+      $getProducts({ data: categoryId ? { categoryId } : undefined, signal }),
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 30, // 30 minutes
   });

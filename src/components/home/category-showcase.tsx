@@ -42,11 +42,11 @@ export function CategoryShowcase({ categories }: CategoryShowcaseProps) {
                     )}
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold group-hover:text-primary">
+                    <h3 className="group-hover:text-primary font-semibold">
                       {category.name}
                     </h3>
                     {category.description && (
-                      <p className="text-muted-foreground mt-1 text-sm line-clamp-2">
+                      <p className="text-muted-foreground mt-1 line-clamp-2 text-sm">
                         {category.description}
                       </p>
                     )}

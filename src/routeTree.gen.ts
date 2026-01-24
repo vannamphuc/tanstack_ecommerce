@@ -17,8 +17,13 @@ import { Route as ProductsProductIdRouteImport } from './routes/products/$produc
 import { Route as GuestSignupRouteImport } from './routes/_guest/signup'
 import { Route as GuestLoginRouteImport } from './routes/_guest/login'
 import { Route as AuthDashboardRouteRouteImport } from './routes/_auth/dashboard/route'
+import { Route as AuthOrdersIndexRouteImport } from './routes/_auth/orders/index'
 import { Route as AuthDashboardIndexRouteImport } from './routes/_auth/dashboard/index'
+import { Route as AuthCheckoutIndexRouteImport } from './routes/_auth/checkout/index'
+import { Route as AuthCartIndexRouteImport } from './routes/_auth/cart/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthOrdersOrderIdIndexRouteImport } from './routes/_auth/orders/$orderId/index'
+import { Route as AuthOrdersOrderIdConfirmationRouteImport } from './routes/_auth/orders/$orderId/confirmation'
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
   id: '/_guest',
@@ -58,16 +63,42 @@ const AuthDashboardRouteRoute = AuthDashboardRouteRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthOrdersIndexRoute = AuthOrdersIndexRouteImport.update({
+  id: '/orders/',
+  path: '/orders/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthDashboardIndexRoute = AuthDashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthDashboardRouteRoute,
+} as any)
+const AuthCheckoutIndexRoute = AuthCheckoutIndexRouteImport.update({
+  id: '/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthCartIndexRoute = AuthCartIndexRouteImport.update({
+  id: '/cart/',
+  path: '/cart/',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthOrdersOrderIdIndexRoute = AuthOrdersOrderIdIndexRouteImport.update({
+  id: '/orders/$orderId/',
+  path: '/orders/$orderId/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthOrdersOrderIdConfirmationRoute =
+  AuthOrdersOrderIdConfirmationRouteImport.update({
+    id: '/orders/$orderId/confirmation',
+    path: '/orders/$orderId/confirmation',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -77,7 +108,12 @@ export interface FileRoutesByFullPath {
   '/products/$productId': typeof ProductsProductIdRoute
   '/products/': typeof ProductsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cart/': typeof AuthCartIndexRoute
+  '/checkout/': typeof AuthCheckoutIndexRoute
   '/dashboard/': typeof AuthDashboardIndexRoute
+  '/orders/': typeof AuthOrdersIndexRoute
+  '/orders/$orderId/confirmation': typeof AuthOrdersOrderIdConfirmationRoute
+  '/orders/$orderId/': typeof AuthOrdersOrderIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,7 +122,12 @@ export interface FileRoutesByTo {
   '/products/$productId': typeof ProductsProductIdRoute
   '/products': typeof ProductsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/cart': typeof AuthCartIndexRoute
+  '/checkout': typeof AuthCheckoutIndexRoute
   '/dashboard': typeof AuthDashboardIndexRoute
+  '/orders': typeof AuthOrdersIndexRoute
+  '/orders/$orderId/confirmation': typeof AuthOrdersOrderIdConfirmationRoute
+  '/orders/$orderId': typeof AuthOrdersOrderIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -99,7 +140,12 @@ export interface FileRoutesById {
   '/products/$productId': typeof ProductsProductIdRoute
   '/products/': typeof ProductsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_auth/cart/': typeof AuthCartIndexRoute
+  '/_auth/checkout/': typeof AuthCheckoutIndexRoute
   '/_auth/dashboard/': typeof AuthDashboardIndexRoute
+  '/_auth/orders/': typeof AuthOrdersIndexRoute
+  '/_auth/orders/$orderId/confirmation': typeof AuthOrdersOrderIdConfirmationRoute
+  '/_auth/orders/$orderId/': typeof AuthOrdersOrderIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,7 +157,12 @@ export interface FileRouteTypes {
     | '/products/$productId'
     | '/products/'
     | '/api/auth/$'
+    | '/cart/'
+    | '/checkout/'
     | '/dashboard/'
+    | '/orders/'
+    | '/orders/$orderId/confirmation'
+    | '/orders/$orderId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,7 +171,12 @@ export interface FileRouteTypes {
     | '/products/$productId'
     | '/products'
     | '/api/auth/$'
+    | '/cart'
+    | '/checkout'
     | '/dashboard'
+    | '/orders'
+    | '/orders/$orderId/confirmation'
+    | '/orders/$orderId'
   id:
     | '__root__'
     | '/'
@@ -132,7 +188,12 @@ export interface FileRouteTypes {
     | '/products/$productId'
     | '/products/'
     | '/api/auth/$'
+    | '/_auth/cart/'
+    | '/_auth/checkout/'
     | '/_auth/dashboard/'
+    | '/_auth/orders/'
+    | '/_auth/orders/$orderId/confirmation'
+    | '/_auth/orders/$orderId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -202,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardRouteRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/orders/': {
+      id: '/_auth/orders/'
+      path: '/orders'
+      fullPath: '/orders/'
+      preLoaderRoute: typeof AuthOrdersIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/dashboard/': {
       id: '/_auth/dashboard/'
       path: '/'
@@ -209,12 +277,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthDashboardIndexRouteImport
       parentRoute: typeof AuthDashboardRouteRoute
     }
+    '/_auth/checkout/': {
+      id: '/_auth/checkout/'
+      path: '/checkout'
+      fullPath: '/checkout/'
+      preLoaderRoute: typeof AuthCheckoutIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/cart/': {
+      id: '/_auth/cart/'
+      path: '/cart'
+      fullPath: '/cart/'
+      preLoaderRoute: typeof AuthCartIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_auth/orders/$orderId/': {
+      id: '/_auth/orders/$orderId/'
+      path: '/orders/$orderId'
+      fullPath: '/orders/$orderId/'
+      preLoaderRoute: typeof AuthOrdersOrderIdIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_auth/orders/$orderId/confirmation': {
+      id: '/_auth/orders/$orderId/confirmation'
+      path: '/orders/$orderId/confirmation'
+      fullPath: '/orders/$orderId/confirmation'
+      preLoaderRoute: typeof AuthOrdersOrderIdConfirmationRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
   }
 }
@@ -232,10 +328,20 @@ const AuthDashboardRouteRouteWithChildren =
 
 interface AuthRouteRouteChildren {
   AuthDashboardRouteRoute: typeof AuthDashboardRouteRouteWithChildren
+  AuthCartIndexRoute: typeof AuthCartIndexRoute
+  AuthCheckoutIndexRoute: typeof AuthCheckoutIndexRoute
+  AuthOrdersIndexRoute: typeof AuthOrdersIndexRoute
+  AuthOrdersOrderIdConfirmationRoute: typeof AuthOrdersOrderIdConfirmationRoute
+  AuthOrdersOrderIdIndexRoute: typeof AuthOrdersOrderIdIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthDashboardRouteRoute: AuthDashboardRouteRouteWithChildren,
+  AuthCartIndexRoute: AuthCartIndexRoute,
+  AuthCheckoutIndexRoute: AuthCheckoutIndexRoute,
+  AuthOrdersIndexRoute: AuthOrdersIndexRoute,
+  AuthOrdersOrderIdConfirmationRoute: AuthOrdersOrderIdConfirmationRoute,
+  AuthOrdersOrderIdIndexRoute: AuthOrdersOrderIdIndexRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(

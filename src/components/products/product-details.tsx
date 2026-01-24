@@ -38,7 +38,7 @@ export function ProductDetails({ product }: ProductDetailsProps) {
       {/* Description */}
       <div>
         <h2 className="mb-2 text-lg font-semibold">Description</h2>
-        <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
+        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
           {product.description}
         </p>
       </div>

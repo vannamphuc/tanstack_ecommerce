@@ -32,14 +32,12 @@ import { db } from "~/lib/db";
 import * as schema from "~/lib/db/schema";
 
 // GET - No input
-export const $getProducts = createServerFn({ method: "GET" }).handler(
-  async () => {
-    const products = await db.query.product.findMany({
-      orderBy: [desc(schema.product.createdAt)],
-    });
-    return products;
-  }
-);
+export const $getProducts = createServerFn({ method: "GET" }).handler(async () => {
+  const products = await db.query.product.findMany({
+    orderBy: [desc(schema.product.createdAt)],
+  });
+  return products;
+});
 
 // GET - With input validation (Zod)
 export const $getProduct = createServerFn({ method: "GET" })
@@ -64,7 +62,7 @@ export const $addToCart = createServerFn({ method: "POST" })
     z.object({
       productId: z.string().min(1),
       quantity: z.number().int().positive(),
-    })
+    }),
   )
   .handler(async ({ context, data }) => {
     // context.user available from middleware
@@ -236,9 +234,7 @@ export const useProductsInfinite = (categoryId?: string) => {
 };
 
 export const useProductsInfiniteSuspense = (categoryId?: string) => {
-  return useSuspenseInfiniteQuery(
-    createProductsInfiniteQueryOptions(categoryId)
-  );
+  return useSuspenseInfiniteQuery(createProductsInfiniteQueryOptions(categoryId));
 };
 ```
 
@@ -484,8 +480,7 @@ export const useAddToCart = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { productId: string; quantity: number }) =>
-      $addToCart({ data }),
+    mutationFn: (data: { productId: string; quantity: number }) => $addToCart({ data }),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CART_QUERY_KEYS.all });
@@ -504,8 +499,7 @@ export const useRemoveFromCart = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (cartItemId: string) =>
-      $removeFromCart({ data: { cartItemId } }),
+    mutationFn: (cartItemId: string) => $removeFromCart({ data: { cartItemId } }),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: CART_QUERY_KEYS.all });
@@ -537,23 +531,16 @@ export const useUpdateCartQuantity = () => {
       await queryClient.cancelQueries({ queryKey: CART_QUERY_KEYS.items() });
 
       // Snapshot previous value for rollback
-      const previousCart = queryClient.getQueryData<CartItem[]>(
-        CART_QUERY_KEYS.items()
-      );
+      const previousCart = queryClient.getQueryData<CartItem[]>(CART_QUERY_KEYS.items());
 
       // Optimistically update cache
       // IMPORTANT: Handle undefined/null case
-      queryClient.setQueryData<CartItem[]>(
-        CART_QUERY_KEYS.items(),
-        (old) => {
-          if (!old) return old; // Return undefined if no data yet
-          return old.map((item) =>
-            item.id === newData.cartItemId
-              ? { ...item, quantity: newData.quantity }
-              : item
-          );
-        }
-      );
+      queryClient.setQueryData<CartItem[]>(CART_QUERY_KEYS.items(), (old) => {
+        if (!old) return old; // Return undefined if no data yet
+        return old.map((item) =>
+          item.id === newData.cartItemId ? { ...item, quantity: newData.quantity } : item,
+        );
+      });
 
       // Return context for rollback
       return { previousCart };
@@ -582,15 +569,12 @@ export const useAddToCartOptimistic = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: { productId: string; quantity: number }) =>
-      $addToCart({ data }),
+    mutationFn: (data: { productId: string; quantity: number }) => $addToCart({ data }),
 
     onMutate: async (newData) => {
       await queryClient.cancelQueries({ queryKey: CART_QUERY_KEYS.items() });
 
-      const previousCart = queryClient.getQueryData<CartItem[]>(
-        CART_QUERY_KEYS.items()
-      );
+      const previousCart = queryClient.getQueryData<CartItem[]>(CART_QUERY_KEYS.items());
 
       // Create optimistic item with temporary ID
       const optimisticItem: CartItem = {
@@ -602,9 +586,8 @@ export const useAddToCartOptimistic = () => {
         _optimistic: true,
       };
 
-      queryClient.setQueryData<CartItem[]>(
-        CART_QUERY_KEYS.items(),
-        (old) => (old ? [...old, optimisticItem] : [optimisticItem])
+      queryClient.setQueryData<CartItem[]>(CART_QUERY_KEYS.items(), (old) =>
+        old ? [...old, optimisticItem] : [optimisticItem],
       );
 
       return { previousCart };
@@ -963,9 +946,7 @@ export const Route = createFileRoute("/")({
       // Robots
       { name: "robots", content: "index, follow" },
     ],
-    links: [
-      { rel: "canonical", href: "https://myapp.com" },
-    ],
+    links: [{ rel: "canonical", href: "https://myapp.com" }],
   }),
   component: HomePage,
 });
@@ -978,7 +959,7 @@ export const Route = createFileRoute("/")({
 export const Route = createFileRoute("/products/$productId")({
   loader: async ({ params, context: { queryClient } }) => {
     const product = await queryClient.ensureQueryData(
-      createProductQueryOptions(params.productId)
+      createProductQueryOptions(params.productId),
     );
     return { product };
   },
@@ -1009,9 +990,7 @@ export const Route = createFileRoute("/products/$productId")({
         { property: "product:price:amount", content: String(product.price) },
         { property: "product:price:currency", content: "USD" },
       ],
-      links: [
-        { rel: "canonical", href: `https://myshop.com/products/${product.id}` },
-      ],
+      links: [{ rel: "canonical", href: `https://myshop.com/products/${product.id}` }],
     };
   },
 
@@ -1465,13 +1444,7 @@ const authClient = createAuthClient({
 export default authClient;
 
 // Export typed hooks/methods
-export const {
-  signIn,
-  signUp,
-  signOut,
-  useSession,
-  getSession,
-} = authClient;
+export const { signIn, signUp, signOut, useSession, getSession } = authClient;
 ```
 
 ### Auth Server Function
@@ -1553,8 +1526,7 @@ export function createAppRouter() {
       dehydrate: {
         // Serialize errors for client
         shouldDehydrateQuery: (query) =>
-          query.state.status === "success" ||
-          query.state.status === "error",
+          query.state.status === "success" || query.state.status === "error",
       },
     },
   });
@@ -1610,22 +1582,22 @@ function DynamicTime() {
 
 ## Quick Reference
 
-| Pattern | When to Use |
-|---------|-------------|
-| `prefetchQuery` | Background fetch, don't block navigation |
-| `ensureQueryData` | Must have data before render, throws on error |
-| `useSuspenseQuery` | With prefetch + Suspense boundary |
-| `useQuery` | Conditional/lazy fetching, manual loading states |
-| `useInfiniteQuery` | Pagination, infinite scroll |
-| `beforeLoad` | Auth checks, redirects, context injection |
-| `loader` | Data prefetching |
-| `loaderDeps` | Re-run loader on search/param change |
-| `validateSearch` | Type-safe URL search params |
-| `defer` + `Await` | Streaming non-critical data |
-| `head` | SEO meta tags |
-| `errorComponent` | Route-level error UI |
-| `notFoundComponent` | 404 UI |
-| `pendingComponent` | Loading UI during navigation |
+| Pattern             | When to Use                                      |
+| ------------------- | ------------------------------------------------ |
+| `prefetchQuery`     | Background fetch, don't block navigation         |
+| `ensureQueryData`   | Must have data before render, throws on error    |
+| `useSuspenseQuery`  | With prefetch + Suspense boundary                |
+| `useQuery`          | Conditional/lazy fetching, manual loading states |
+| `useInfiniteQuery`  | Pagination, infinite scroll                      |
+| `beforeLoad`        | Auth checks, redirects, context injection        |
+| `loader`            | Data prefetching                                 |
+| `loaderDeps`        | Re-run loader on search/param change             |
+| `validateSearch`    | Type-safe URL search params                      |
+| `defer` + `Await`   | Streaming non-critical data                      |
+| `head`              | SEO meta tags                                    |
+| `errorComponent`    | Route-level error UI                             |
+| `notFoundComponent` | 404 UI                                           |
+| `pendingComponent`  | Loading UI during navigation                     |
 
 ---
 

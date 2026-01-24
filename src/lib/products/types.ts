@@ -1,4 +1,9 @@
-import type { $getProducts, $getProduct, $getCategories, $getFeaturedProducts } from "./functions";
+import type {
+  $getCategories,
+  $getFeaturedProducts,
+  $getProduct,
+  $getProducts,
+} from "./functions";
 
 /**
  * Type inference from server functions

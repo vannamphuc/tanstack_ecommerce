@@ -1,10 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
 import { z } from "zod";
-import { createProductsQueryOptions, createCategoriesQueryOptions, useProductsSuspense, useCategoriesSuspense } from "~/lib/products/queries";
-import { ProductGrid } from "~/components/products/product-grid";
 import { ProductFilters } from "~/components/products/product-filters";
+import { ProductGrid } from "~/components/products/product-grid";
 import { ProductListSkeleton } from "~/components/products/product-list-skeleton";
+import {
+  createCategoriesQueryOptions,
+  createProductsQueryOptions,
+  useCategoriesSuspense,
+  useProductsSuspense,
+} from "~/lib/products/queries";
 
 // Search params schema
 const productSearchSchema = z.object({
@@ -38,9 +43,7 @@ function ProductsPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="mb-2 text-3xl font-bold">Products</h1>
-        <p className="text-muted-foreground">
-          Browse our collection of quality products
-        </p>
+        <p className="text-muted-foreground">Browse our collection of quality products</p>
       </div>
 
       <Suspense fallback={<ProductListSkeleton />}>

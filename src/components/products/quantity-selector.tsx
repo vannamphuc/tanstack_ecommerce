@@ -53,7 +53,7 @@ export function QuantitySelector({
         value={value}
         onChange={handleInputChange}
         disabled={disabled}
-        className="h-10 w-16 rounded-md border border-input bg-background text-center text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+        className="border-input bg-background focus:ring-ring h-10 w-16 rounded-md border text-center text-sm focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         aria-label="Quantity"
       />
       <Button

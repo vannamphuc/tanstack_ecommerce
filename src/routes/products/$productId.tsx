@@ -1,18 +1,19 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Suspense, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { createProductQueryOptions, useProductSuspense } from "~/lib/products/queries";
-import { ProductImageGallery } from "~/components/products/product-image-gallery";
+import { Suspense, useState } from "react";
+import { AddToCartButton } from "~/components/cart/add-to-cart-button";
 import { ProductDetails } from "~/components/products/product-details";
+import { ProductImageGallery } from "~/components/products/product-image-gallery";
 import { QuantitySelector } from "~/components/products/quantity-selector";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
+import { createProductQueryOptions, useProductSuspense } from "~/lib/products/queries";
 
 export const Route = createFileRoute("/products/$productId")({
   loader: async ({ params, context: { queryClient } }) => {
     try {
       const product = await queryClient.ensureQueryData(
-        createProductQueryOptions(params.productId)
+        createProductQueryOptions(params.productId),
       );
       return { product };
     } catch (error) {
@@ -30,7 +31,7 @@ export const Route = createFileRoute("/products/$productId")({
       <p className="text-muted-foreground mt-2">
         The product you're looking for doesn't exist or has been removed.
       </p>
-      <Button className="mt-6" render={<Link to="/products" />} nativeButton={false}>
+      <Button className="mt-6" render={<Link to="/products" />}>
         Browse Products
       </Button>
     </div>
@@ -42,7 +43,7 @@ function ProductDetailPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Button variant="ghost" className="mb-6 gap-2" render={<Link to="/products" />} nativeButton={false}>
+      <Button variant="ghost" className="mb-6 gap-2" render={<Link to="/products" />}>
         <ArrowLeft className="h-4 w-4" />
         Back to Products
       </Button>
@@ -64,11 +65,6 @@ function ProductDetailContent({ productId }: ProductDetailContentProps) {
 
   const isOutOfStock = product.stock === 0;
   const maxQuantity = Math.min(product.stock, 99);
-
-  const handleAddToCart = () => {
-    // TODO: Implement add to cart in Phase 2
-    console.log("Add to cart:", { productId: product.id, quantity });
-  };
 
   return (
     <div className="grid gap-8 md:grid-cols-2">
@@ -94,14 +90,13 @@ function ProductDetailContent({ productId }: ProductDetailContentProps) {
             />
           </div>
 
-          <Button
+          <AddToCartButton
+            productId={product.id}
+            quantity={quantity}
+            disabled={isOutOfStock}
             size="lg"
             className="w-full"
-            disabled={isOutOfStock}
-            onClick={handleAddToCart}
-          >
-            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
-          </Button>
+          />
 
           {!isOutOfStock && (
             <p className="text-muted-foreground text-center text-sm">

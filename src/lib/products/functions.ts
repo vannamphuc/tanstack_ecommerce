@@ -1,8 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
+import { asc, desc, eq } from "drizzle-orm";
 import { z } from "zod";
-import { eq, desc, asc, and } from "drizzle-orm";
 import { db } from "~/lib/db";
-import { product, category, productImage } from "~/lib/db/schema";
+import { category, product, productImage } from "~/lib/db/schema";
 
 /**
  * Get all products with optional category filter
@@ -13,7 +13,7 @@ export const $getProducts = createServerFn({ method: "GET" })
       .object({
         categoryId: z.string().optional(),
       })
-      .optional()
+      .optional(),
   )
   .handler(async ({ data }) => {
     const products = await db.query.product.findMany({
@@ -68,19 +68,21 @@ export const $getCategories = createServerFn({ method: "GET" }).handler(async ()
 /**
  * Get featured products for home page
  */
-export const $getFeaturedProducts = createServerFn({ method: "GET" }).handler(async () => {
-  const featuredProducts = await db.query.product.findMany({
-    where: eq(product.featured, true),
-    with: {
-      category: true,
-      images: {
-        orderBy: [asc(productImage.order)],
-        limit: 1,
+export const $getFeaturedProducts = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const featuredProducts = await db.query.product.findMany({
+      where: eq(product.featured, true),
+      with: {
+        category: true,
+        images: {
+          orderBy: [asc(productImage.order)],
+          limit: 1,
+        },
       },
-    },
-    orderBy: [desc(product.createdAt)],
-    limit: 6, // Show only 6 featured products
-  });
+      orderBy: [desc(product.createdAt)],
+      limit: 6, // Show only 6 featured products
+    });
 
-  return featuredProducts;
-});
+    return featuredProducts;
+  },
+);

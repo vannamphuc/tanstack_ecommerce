@@ -24,7 +24,10 @@ export function SiteFooter() {
             <h3 className="mb-4 text-sm font-semibold">Shop</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/products" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/products"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   All Products
                 </Link>
               </li>
@@ -45,17 +48,26 @@ export function SiteFooter() {
             <h3 className="mb-4 text-sm font-semibold">Customer Service</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Shipping Info
                 </a>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Returns
                 </a>
               </li>
@@ -67,7 +79,10 @@ export function SiteFooter() {
             <h3 className="mb-4 text-sm font-semibold">Account</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  to="/dashboard"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Dashboard
                 </Link>
               </li>
@@ -76,8 +91,10 @@ export function SiteFooter() {
           </div>
         </div>
 
-        <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Shop. All rights reserved. Built with TanStack Start.</p>
+        <div className="text-muted-foreground mt-8 border-t pt-8 text-center text-sm">
+          <p>
+            &copy; {currentYear} Shop. All rights reserved. Built with TanStack Start.
+          </p>
         </div>
       </div>
     </footer>

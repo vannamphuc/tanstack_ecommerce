@@ -9,11 +9,10 @@ export function ProductImageGallery({ product }: ProductImageGalleryProps) {
   const images = product.images;
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const selectedImage =
-    images[selectedIndex] || {
-      url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=800&fit=crop",
-      alt: product.name,
-    };
+  const selectedImage = images[selectedIndex] || {
+    url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=800&fit=crop",
+    alt: product.name,
+  };
 
   if (images.length === 0) {
     return (
@@ -47,7 +46,7 @@ export function ProductImageGallery({ product }: ProductImageGalleryProps) {
               onClick={() => setSelectedIndex(index)}
               className={`aspect-square overflow-hidden rounded-lg border-2 transition-all ${
                 index === selectedIndex
-                  ? "border-primary ring-2 ring-primary ring-offset-2"
+                  ? "border-primary ring-primary ring-2 ring-offset-2"
                   : "border-transparent hover:border-gray-300"
               }`}
               aria-label={`View image ${index + 1}`}

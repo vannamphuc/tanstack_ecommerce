@@ -1,3 +1,5 @@
+import { X } from "lucide-react";
+import { Button } from "~/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -5,8 +7,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Button } from "~/components/ui/button";
-import { X } from "lucide-react";
 import type { Categories } from "~/lib/products/types";
 
 interface ProductFiltersProps {
@@ -26,6 +26,10 @@ export function ProductFilters({
 
   const hasActiveFilters = !!selectedCategoryId;
 
+  // Find the selected category to display its name
+  const selectedCategory = categories.find((cat) => cat.id === selectedCategoryId);
+  const displayValue = selectedCategory?.name || "All Categories";
+
   return (
     <div className="mb-6 flex flex-wrap items-center gap-4">
       <div className="flex items-center gap-2">
@@ -43,7 +47,7 @@ export function ProductFilters({
           }}
         >
           <SelectTrigger id="category-filter" className="w-[200px]">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder="All Categories">{displayValue}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>

@@ -20,7 +20,7 @@ function DashboardLayout() {
           </pre>
         </div>
 
-        <Button render={<Link to="/" />} className="w-fit" size="lg" nativeButton={false}>
+        <Button render={<Link to="/" />} className="w-fit" size="lg">
           Back to home
         </Button>
       </div>

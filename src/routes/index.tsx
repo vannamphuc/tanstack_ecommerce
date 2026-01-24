@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense } from "react";
-import {
-  createFeaturedProductsQueryOptions,
-  createCategoriesQueryOptions,
-  useFeaturedProductsSuspense,
-  useCategoriesSuspense,
-} from "~/lib/products/queries";
-import { HeroSection } from "~/components/home/hero-section";
-import { FeaturedProductsSection } from "~/components/home/featured-products";
 import { CategoryShowcase } from "~/components/home/category-showcase";
+import { FeaturedProductsSection } from "~/components/home/featured-products";
+import { HeroSection } from "~/components/home/hero-section";
 import { Skeleton } from "~/components/ui/skeleton";
+import {
+  createCategoriesQueryOptions,
+  createFeaturedProductsQueryOptions,
+  useCategoriesSuspense,
+  useFeaturedProductsSuspense,
+} from "~/lib/products/queries";
 
 export const Route = createFileRoute("/")({
   loader: ({ context: { queryClient } }) => {

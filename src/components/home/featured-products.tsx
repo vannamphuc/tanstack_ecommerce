@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { Button } from "~/components/ui/button";
 import { ProductCard } from "~/components/products/product-card";
+import { Button } from "~/components/ui/button";
 import type { FeaturedProducts } from "~/lib/products/types";
 
 interface FeaturedProductsSectionProps {
@@ -23,12 +23,7 @@ export function FeaturedProductsSection({ products }: FeaturedProductsSectionPro
               Check out our hand-picked selection of amazing products
             </p>
           </div>
-          <Button
-            variant="ghost"
-            render={<Link to="/products" />}
-            nativeButton={false}
-            className="gap-2"
-          >
+          <Button variant="ghost" render={<Link to="/products" />} className="gap-2">
             View All
             <ArrowRight className="h-4 w-4" />
           </Button>

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
+import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
 import type { ProductListItem } from "~/lib/products/types";
 
 interface ProductCardProps {
@@ -9,7 +9,9 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const firstImage = product.images[0];
-  const imageUrl = firstImage?.url || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop";
+  const imageUrl =
+    firstImage?.url ||
+    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop";
   const imageAlt = firstImage?.alt || product.name;
 
   return (
@@ -28,17 +30,17 @@ export function ProductCard({ product }: ProductCardProps) {
               loading="lazy"
             />
             {product.featured && (
-              <Badge className="absolute right-2 top-2">Featured</Badge>
+              <Badge className="absolute top-2 right-2">Featured</Badge>
             )}
             {product.stock === 0 && (
-              <div className="bg-black/60 absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/60">
                 <Badge variant="destructive">Out of Stock</Badge>
               </div>
             )}
           </div>
         </CardHeader>
         <CardContent className="p-4">
-          <h3 className="mb-1 line-clamp-2 font-semibold group-hover:text-primary">
+          <h3 className="group-hover:text-primary mb-1 line-clamp-2 font-semibold">
             {product.name}
           </h3>
           {product.category && (

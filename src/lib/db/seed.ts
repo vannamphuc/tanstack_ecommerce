@@ -1,7 +1,7 @@
 import "dotenv/config";
+import { nanoid } from "nanoid";
 import { db } from "./index";
 import { category, product, productImage } from "./schema";
-import { nanoid } from "nanoid";
 
 // Helper to create slug from name
 function createSlug(name: string): string {
@@ -31,28 +31,32 @@ async function seed() {
           name: "Electronics",
           slug: "electronics",
           description: "Latest gadgets and electronic devices",
-          image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&fit=crop",
+          image:
+            "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&fit=crop",
         },
         {
           id: nanoid(),
           name: "Clothing",
           slug: "clothing",
           description: "Fashion and apparel for all occasions",
-          image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=300&fit=crop",
+          image:
+            "https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=300&fit=crop",
         },
         {
           id: nanoid(),
           name: "Home & Garden",
           slug: "home-garden",
           description: "Everything for your home and outdoor spaces",
-          image: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=400&h=300&fit=crop",
+          image:
+            "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?w=400&h=300&fit=crop",
         },
         {
           id: nanoid(),
           name: "Books",
           slug: "books",
           description: "Fiction, non-fiction, and educational books",
-          image: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400&h=300&fit=crop",
+          image:
+            "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=400&h=300&fit=crop",
         },
       ])
       .returning();
@@ -84,7 +88,9 @@ async function seed() {
             price: "799.99",
             stock: 8,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Mechanical Gaming Keyboard",
@@ -93,7 +99,9 @@ async function seed() {
             price: "149.99",
             stock: 42,
             featured: true,
-            images: ["https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Smartphone Pro Max",
@@ -120,7 +128,9 @@ async function seed() {
             price: "89.99",
             stock: 35,
             featured: true,
-            images: ["https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Premium Cotton T-Shirt Pack",
@@ -129,7 +139,9 @@ async function seed() {
             price: "39.99",
             stock: 120,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Wool Blend Winter Coat",
@@ -138,7 +150,9 @@ async function seed() {
             price: "249.99",
             stock: 12,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1539533018447-63fcce2678e3?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Athletic Running Shoes",
@@ -165,7 +179,9 @@ async function seed() {
             price: "149.99",
             stock: 18,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Ceramic Planter Set",
@@ -174,7 +190,9 @@ async function seed() {
             price: "59.99",
             stock: 62,
             featured: true,
-            images: ["https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Memory Foam Pillow Set",
@@ -183,7 +201,9 @@ async function seed() {
             price: "79.99",
             stock: 33,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Stainless Steel Cookware Set",
@@ -192,7 +212,9 @@ async function seed() {
             price: "399.99",
             stock: 9,
             featured: true,
-            images: ["https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800&h=800&fit=crop",
+            ],
           },
         ],
       },
@@ -207,7 +229,9 @@ async function seed() {
             price: "49.99",
             stock: 88,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Mindfulness and Meditation",
@@ -216,7 +240,9 @@ async function seed() {
             price: "24.99",
             stock: 105,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "World History Encyclopedia",
@@ -225,7 +251,9 @@ async function seed() {
             price: "79.99",
             stock: 15,
             featured: true,
-            images: ["https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=800&h=800&fit=crop",
+            ],
           },
           {
             name: "Classic Fiction Collection",
@@ -234,7 +262,9 @@ async function seed() {
             price: "89.99",
             stock: 22,
             featured: false,
-            images: ["https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=800&fit=crop"],
+            images: [
+              "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=800&fit=crop",
+            ],
           },
         ],
       },
