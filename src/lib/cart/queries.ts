@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CART_QUERY_KEYS } from "~/lib/queries/query-keys";
+import { formatErrorMessage } from "~/lib/utils/error-formatter";
 import {
   $addToCart,
   $clearCart,
@@ -71,7 +72,7 @@ export const useAddToCart = () => {
     },
 
     onError: (error: Error) => {
-      toast.error(error?.message || "Failed to add to cart");
+      toast.error(formatErrorMessage(error));
     },
   });
 };
@@ -130,7 +131,7 @@ export const useUpdateCartQuantity = () => {
       if (context?.previousSummary) {
         queryClient.setQueryData(CART_QUERY_KEYS.summary(), context.previousSummary);
       }
-      toast.error(error?.message || "Failed to update quantity");
+      toast.error(formatErrorMessage(error));
     },
 
     onSettled: () => {
@@ -189,7 +190,7 @@ export const useRemoveFromCart = () => {
       if (context?.previousSummary) {
         queryClient.setQueryData(CART_QUERY_KEYS.summary(), context.previousSummary);
       }
-      toast.error(error?.message || "Failed to remove item");
+      toast.error(formatErrorMessage(error));
     },
 
     onSuccess: () => {
@@ -215,7 +216,7 @@ export const useClearCart = () => {
     },
 
     onError: (error: Error) => {
-      toast.error(error?.message || "Failed to clear cart");
+      toast.error(formatErrorMessage(error));
     },
   });
 };

@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { CART_QUERY_KEYS, ORDER_QUERY_KEYS } from "~/lib/queries/query-keys";
+import { formatErrorMessage } from "~/lib/utils/error-formatter";
 import { $createOrder, $getOrder, $getOrders } from "./functions";
 import type { CreateOrderInput } from "./types";
 
@@ -77,7 +78,7 @@ export const useCreateOrder = () => {
     },
 
     onError: (error: Error) => {
-      toast.error(error?.message || "Failed to create order");
+      toast.error(formatErrorMessage(error));
     },
   });
 };
