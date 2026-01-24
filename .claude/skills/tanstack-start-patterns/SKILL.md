@@ -4,9 +4,11 @@ description: |
   Comprehensive patterns and best practices for TanStack Start full-stack React framework.
   Use when: Building features with TanStack Start, Router, Query, Form.
   Helps with: Server functions, data fetching, route protection, form validation, mutations, SSR.
+  Also covers: React Query cache invalidation gotchas (invalidateQueries vs removeQueries),
+  auth state not updating after login/signup, UI not refreshing after mutations.
   Solves: Type-safe full-stack development patterns.
 author: Claude Code
-version: 1.2.0
+version: 1.3.0
 date: 2025-01-25
 ---
 
@@ -512,6 +514,61 @@ export const useRemoveFromCart = () => {
   });
 };
 ```
+
+### Cache Invalidation Patterns (Common Gotcha)
+
+**Problem**: UI doesn't update after mutation success. Common symptom: Header doesn't show logged-in state after signup (but login works).
+
+**Root Cause**: Using `removeQueries()` instead of `invalidateQueries()`.
+
+#### Understanding the Three Methods
+
+```typescript
+// 1. invalidateQueries - RECOMMENDED for most cases
+// Marks queries as stale → triggers automatic refetch when data is needed
+await queryClient.invalidateQueries({ queryKey: ['auth'] });
+
+// 2. removeQueries - Use with caution
+// Deletes cache entirely → NO automatic refetch
+// Components will show loading state until they fetch again
+queryClient.removeQueries({ queryKey: ['auth'] });
+
+// 3. setQueryData - For optimistic updates
+// Immediately updates cache with new data → no network request
+queryClient.setQueryData(['auth'], newUserData);
+```
+
+#### When to Use Each
+
+| Method | Use Case | Refetch? | UI Behavior |
+|--------|----------|----------|-------------|
+| `invalidateQueries` | After mutations that change server data | Yes (automatic) | Shows fresh data |
+| `removeQueries` | Logout, clearing sensitive data | No | Shows loading/null |
+| `setQueryData` | Optimistic updates, known new value | No | Instant update |
+
+#### Real Example: Auth State After Signup
+
+```typescript
+// WRONG - removeQueries doesn't trigger refetch
+// Header component won't get new user data
+onSuccess: () => {
+  queryClient.removeQueries({ queryKey: authQueryOptions().queryKey });
+  navigate({ to: '/' });
+}
+
+// CORRECT - invalidateQueries marks stale and refetches
+onSuccess: async () => {
+  await queryClient.invalidateQueries({ queryKey: authQueryOptions().queryKey });
+  navigate({ to: '/' });
+}
+```
+
+#### Key Notes
+
+- Always `await` invalidateQueries if you need data before navigation
+- Use query key factories for consistency: `QUERY_KEYS.items()` not `['cart', 'items']`
+- `invalidateQueries` with `{ exact: true }` only invalidates exact key match
+- Without `exact`, it invalidates all queries that START with the key
 
 ### Optimistic Updates
 
