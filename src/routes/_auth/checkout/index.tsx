@@ -119,7 +119,8 @@ function CheckoutContent() {
               <form.Field
                 name="fullName"
                 children={(field) => {
-                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>
@@ -144,7 +145,8 @@ function CheckoutContent() {
               <form.Field
                 name="street"
                 children={(field) => {
-                  const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                  const isInvalid =
+                    field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid}>
                       <FieldLabel htmlFor={field.name}>
@@ -170,7 +172,8 @@ function CheckoutContent() {
                 <form.Field
                   name="city"
                   children={(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid}>
                         <FieldLabel htmlFor={field.name}>
@@ -194,7 +197,8 @@ function CheckoutContent() {
                 <form.Field
                   name="state"
                   children={(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid}>
                         <FieldLabel htmlFor={field.name}>
@@ -205,7 +209,9 @@ function CheckoutContent() {
                           name={field.name}
                           value={field.state.value}
                           onBlur={field.handleBlur}
-                          onChange={(e) => field.handleChange(e.target.value.toUpperCase())}
+                          onChange={(e) =>
+                            field.handleChange(e.target.value.toUpperCase())
+                          }
                           aria-invalid={isInvalid}
                           placeholder="NY"
                           maxLength={2}
@@ -222,7 +228,8 @@ function CheckoutContent() {
                 <form.Field
                   name="postalCode"
                   children={(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid}>
                         <FieldLabel htmlFor={field.name}>
@@ -246,7 +253,8 @@ function CheckoutContent() {
                 <form.Field
                   name="phone"
                   children={(field) => {
-                    const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid}>
                         <FieldLabel htmlFor={field.name}>
@@ -277,11 +285,12 @@ function CheckoutContent() {
                     <Checkbox
                       id={field.name}
                       checked={field.state.value}
-                      onCheckedChange={(checked) =>
-                        field.handleChange(checked === true)
-                      }
+                      onCheckedChange={(checked) => field.handleChange(checked === true)}
                     />
-                    <FieldLabel htmlFor={field.name} className="cursor-pointer font-normal">
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className="cursor-pointer font-normal"
+                    >
                       Save this address for future orders
                     </FieldLabel>
                   </div>

@@ -6,10 +6,12 @@ description: |
   Helps with: Server functions, data fetching, route protection, form validation, mutations, SSR.
   Also covers: React Query cache invalidation gotchas (invalidateQueries vs removeQueries),
   auth state not updating after login/signup, UI not refreshing after mutations.
+  SEO features: Dynamic meta tags, JSON-LD structured data, server routes for sitemap.xml
+  and robots.txt, static prerendering configuration, canonical URLs.
   Solves: Type-safe full-stack development patterns.
 author: Claude Code
-version: 1.3.0
-date: 2025-01-25
+version: 1.4.0
+date: 2025-01-29
 ---
 
 # TanStack Start Full-Stack Patterns
@@ -526,25 +528,25 @@ export const useRemoveFromCart = () => {
 ```typescript
 // 1. invalidateQueries - RECOMMENDED for most cases
 // Marks queries as stale → triggers automatic refetch when data is needed
-await queryClient.invalidateQueries({ queryKey: ['auth'] });
+await queryClient.invalidateQueries({ queryKey: ["auth"] });
 
 // 2. removeQueries - Use with caution
 // Deletes cache entirely → NO automatic refetch
 // Components will show loading state until they fetch again
-queryClient.removeQueries({ queryKey: ['auth'] });
+queryClient.removeQueries({ queryKey: ["auth"] });
 
 // 3. setQueryData - For optimistic updates
 // Immediately updates cache with new data → no network request
-queryClient.setQueryData(['auth'], newUserData);
+queryClient.setQueryData(["auth"], newUserData);
 ```
 
 #### When to Use Each
 
-| Method | Use Case | Refetch? | UI Behavior |
-|--------|----------|----------|-------------|
-| `invalidateQueries` | After mutations that change server data | Yes (automatic) | Shows fresh data |
-| `removeQueries` | Logout, clearing sensitive data | No | Shows loading/null |
-| `setQueryData` | Optimistic updates, known new value | No | Instant update |
+| Method              | Use Case                                | Refetch?        | UI Behavior        |
+| ------------------- | --------------------------------------- | --------------- | ------------------ |
+| `invalidateQueries` | After mutations that change server data | Yes (automatic) | Shows fresh data   |
+| `removeQueries`     | Logout, clearing sensitive data         | No              | Shows loading/null |
+| `setQueryData`      | Optimistic updates, known new value     | No              | Instant update     |
 
 #### Real Example: Auth State After Signup
 
@@ -553,14 +555,14 @@ queryClient.setQueryData(['auth'], newUserData);
 // Header component won't get new user data
 onSuccess: () => {
   queryClient.removeQueries({ queryKey: authQueryOptions().queryKey });
-  navigate({ to: '/' });
-}
+  navigate({ to: "/" });
+};
 
 // CORRECT - invalidateQueries marks stale and refetches
 onSuccess: async () => {
   await queryClient.invalidateQueries({ queryKey: authQueryOptions().queryKey });
-  navigate({ to: '/' });
-}
+  navigate({ to: "/" });
+};
 ```
 
 #### Key Notes
@@ -1055,6 +1057,44 @@ export const Route = createFileRoute("/products/$productId")({
 });
 ```
 
+### Structured Data (JSON-LD)
+
+Structured data helps search engines understand your content and enables rich results:
+
+```typescript
+// src/routes/products/$productId.tsx
+export const Route = createFileRoute("/products/$productId")({
+  loader: async ({ params }) => {
+    const product = await fetchProduct(params.productId);
+    return { product };
+  },
+  head: ({ loaderData }) => ({
+    meta: [{ title: loaderData.product.name }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: loaderData.product.name,
+          description: loaderData.product.description,
+          image: loaderData.product.image,
+          offers: {
+            "@type": "Offer",
+            price: loaderData.product.price,
+            priceCurrency: "USD",
+            availability: loaderData.product.inStock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+          },
+        }),
+      },
+    ],
+  }),
+  component: ProductPage,
+});
+```
+
 ### Root Layout with HeadContent
 
 ```typescript
@@ -1104,6 +1144,98 @@ function RootLayout() {
   );
 }
 ```
+
+### Static Prerendering
+
+For content that doesn't change frequently, prerender pages at build time:
+
+```typescript
+// vite.config.ts
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+
+export default defineConfig({
+  plugins: [
+    tanstackStart({
+      prerender: {
+        enabled: true,
+        crawlLinks: true, // Auto-discover pages
+      },
+      sitemap: {
+        enabled: true,
+        host: "https://myapp.com",
+      },
+    }),
+  ],
+});
+```
+
+### Dynamic Sitemap (Server Route)
+
+For dynamic content, create a server route:
+
+```typescript
+// src/routes/sitemap[.]xml.ts
+import { createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/sitemap.xml")({
+  server: {
+    handlers: {
+      GET: async () => {
+        const products = await fetchAllProducts();
+
+        const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://myapp.com/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  ${products
+    .map(
+      (product) => `
+  <url>
+    <loc>https://myapp.com/products/${product.id}</loc>
+    <lastmod>${product.updatedAt}</lastmod>
+    <changefreq>weekly</changefreq>
+  </url>`,
+    )
+    .join("")}
+</urlset>`;
+
+        return new Response(sitemap, {
+          headers: { "Content-Type": "application/xml" },
+        });
+      },
+    },
+  },
+});
+```
+
+### Dynamic robots.txt (Server Route)
+
+```typescript
+// src/routes/robots[.]txt.ts
+import { createFileRoute } from "@tanstack/react-router";
+
+export const Route = createFileRoute("/robots.txt")({
+  server: {
+    handlers: {
+      GET: async () => {
+        const robots = `User-agent: *
+Allow: /
+
+Sitemap: https://myapp.com/sitemap.xml`;
+
+        return new Response(robots, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      },
+    },
+  },
+});
+```
+
+**Note:** For static sites, place `robots.txt` and `sitemap.xml` in the `public/` directory instead.
 
 ---
 

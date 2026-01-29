@@ -10,6 +10,13 @@ import authClient from "~/lib/auth/auth-client";
 import { authQueryOptions } from "~/lib/auth/queries";
 
 export const Route = createFileRoute("/_guest/signup")({
+  head: () => ({
+    meta: [
+      { title: "Sign Up | My App Store" },
+      { name: "description", content: "Create a new account at My App Store." },
+      { name: "robots", content: "noindex, follow" },
+    ],
+  }),
   component: SignupForm,
 });
 
@@ -33,7 +40,9 @@ function SignupForm() {
             // Invalidate instead of remove - triggers automatic refetch
             // removeQueries() deletes cache without fetching new data
             // invalidateQueries() marks stale and auto-refetches on next use
-            await queryClient.invalidateQueries({ queryKey: authQueryOptions().queryKey });
+            await queryClient.invalidateQueries({
+              queryKey: authQueryOptions().queryKey,
+            });
             navigate({ to: redirectUrl });
           },
         },

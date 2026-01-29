@@ -9,6 +9,13 @@ import { Label } from "~/components/ui/label";
 import authClient from "~/lib/auth/auth-client";
 
 export const Route = createFileRoute("/_guest/login")({
+  head: () => ({
+    meta: [
+      { title: "Login | My App Store" },
+      { name: "description", content: "Sign in to your My App Store account." },
+      { name: "robots", content: "noindex, follow" },
+    ],
+  }),
   component: LoginForm,
 });
 

@@ -25,6 +25,25 @@ export const Route = createFileRoute("/products/")({
     queryClient.prefetchQuery(createProductsQueryOptions(search.category, search.page));
     queryClient.prefetchQuery(createCategoriesQueryOptions());
   },
+  head: () => {
+    return {
+      meta: [
+        { title: "Products | Shop Online" },
+        {
+          name: "description",
+          content:
+            "Browse our collection of quality products. Find the best deals and shop online with fast shipping.",
+        },
+        // Open Graph
+        { property: "og:type", content: "website" },
+        { property: "og:title", content: "Products | Shop Online" },
+        { property: "og:url", content: "https://myapp-1-zeta.vercel.app/products" },
+        // Robots for pagination
+        { name: "robots", content: "index, follow" },
+      ],
+      links: [{ rel: "canonical", href: "https://myapp-1-zeta.vercel.app/products" }],
+    };
+  },
   pendingComponent: () => (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6">
@@ -109,31 +128,33 @@ function ProductListContent({
           <button
             onClick={() => onPageChange(data.pagination.page - 1)}
             disabled={!data.pagination.hasPrevPage}
-            className="rounded-md border px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted"
+            className="hover:bg-muted rounded-md border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Previous
           </button>
 
           <div className="flex items-center gap-1">
-            {Array.from({ length: data.pagination.totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                onClick={() => onPageChange(p)}
-                className={`rounded-md px-3 py-2 transition-colors ${
-                  p === data.pagination.page
-                    ? "bg-primary text-primary-foreground"
-                    : "border hover:bg-muted"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+            {Array.from({ length: data.pagination.totalPages }, (_, i) => i + 1).map(
+              (p) => (
+                <button
+                  key={p}
+                  onClick={() => onPageChange(p)}
+                  className={`rounded-md px-3 py-2 transition-colors ${
+                    p === data.pagination.page
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted border"
+                  }`}
+                >
+                  {p}
+                </button>
+              ),
+            )}
           </div>
 
           <button
             onClick={() => onPageChange(data.pagination.page + 1)}
             disabled={!data.pagination.hasNextPage}
-            className="rounded-md border px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-muted"
+            className="hover:bg-muted rounded-md border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Next
           </button>

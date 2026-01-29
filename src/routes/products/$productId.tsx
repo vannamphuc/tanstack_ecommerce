@@ -12,7 +12,7 @@ import { createProductQueryOptions, useProductSuspense } from "~/lib/products/qu
 export const Route = createFileRoute("/products/$productId")({
   loader: async ({ params, context: { queryClient } }) => {
     try {
-      const product = queryClient.prefetchQuery(
+      const product = await queryClient.ensureQueryData(
         createProductQueryOptions(params.productId),
       );
       return { product };
@@ -21,6 +21,74 @@ export const Route = createFileRoute("/products/$productId")({
         throw notFound();
       }
       throw error;
+    }
+  },
+  head: ({ loaderData }) => {
+    try {
+      const product = loaderData?.product;
+      if (!product) {
+        return {
+          meta: [
+            { title: "Product | Shop Online" },
+            { name: "description", content: "View this product and shop online." },
+          ],
+        };
+      }
+
+      const url = `https://myapp-1-zeta.vercel.app/products/${product.id}`;
+      const firstImage =
+        product.images?.[0]?.url || "https://myapp-1-zeta.vercel.app/logo.png";
+
+      return {
+        meta: [
+          { title: `${product.name} | Buy Online` },
+          { name: "description", content: product.description.slice(0, 160) },
+          // Open Graph
+          { property: "og:type", content: "product" },
+          { property: "og:title", content: product.name },
+          { property: "og:description", content: product.description },
+          { property: "og:image", content: firstImage },
+          { property: "og:url", content: url },
+          // Product-specific OG
+          { property: "product:price:amount", content: String(product.price) },
+          { property: "product:price:currency", content: "USD" },
+          // Twitter
+          { name: "twitter:card", content: "summary_large_image" },
+          { name: "twitter:title", content: product.name },
+          { name: "twitter:description", content: product.description },
+          { name: "twitter:image", content: firstImage },
+        ],
+        links: [{ rel: "canonical", href: url }],
+        scripts: [
+          {
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              name: product.name,
+              description: product.description,
+              image: firstImage,
+              offers: {
+                "@type": "Offer",
+                url: url,
+                priceCurrency: "USD",
+                price: String(product.price),
+                availability:
+                  product.stock > 0
+                    ? "https://schema.org/InStock"
+                    : "https://schema.org/OutOfStock",
+              },
+            }),
+          },
+        ],
+      };
+    } catch {
+      return {
+        meta: [
+          { title: "Product | Shop Online" },
+          { name: "description", content: "View this product and shop online." },
+        ],
+      };
     }
   },
   pendingComponent: () => <ProductDetailSkeleton />,

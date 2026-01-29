@@ -17,6 +17,28 @@ export const Route = createFileRoute("/")({
     queryClient.prefetchQuery(createFeaturedProductsQueryOptions());
     queryClient.prefetchQuery(createCategoriesQueryOptions());
   },
+  head: () => ({
+    meta: [
+      { title: "Home | Shop Premium Products Online" },
+      {
+        name: "description",
+        content:
+          "Welcome to My App Store - browse featured products and shop premium items across multiple categories.",
+      },
+      // Open Graph
+      { property: "og:type", content: "website" },
+      { property: "og:title", content: "Home | Shop Premium Products Online" },
+      {
+        property: "og:description",
+        content: "Browse featured products and shop premium items.",
+      },
+      { property: "og:url", content: "https://myapp-1-zeta.vercel.app/" },
+      { property: "og:image", content: "https://myapp-1-zeta.vercel.app/logo.png" },
+      // Twitter
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://myapp-1-zeta.vercel.app/" }],
+  }),
   component: HomePage,
 });
 

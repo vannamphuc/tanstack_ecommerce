@@ -9,7 +9,10 @@
       "Bash(pnpm db:seed:*)",
       "Bash(pnpm check-types:*)",
       "Bash(pnpm dlx:*)",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Bash(tree:*)",
+      "Bash(npm run)",
+      "Bash(npm run check-types)"
     ]
   }
 }

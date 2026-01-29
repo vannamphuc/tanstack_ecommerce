@@ -1,0 +1,19 @@
+# robots.txt for My App Store
+# Generated for SEO optimization
+
+User-agent: *
+Allow: /
+
+# Disallow private routes
+Disallow: /login
+Disallow: /signup
+Disallow: /cart
+Disallow: /checkout
+Disallow: /orders
+Disallow: /api
+
+# Crawl delay (optional - in seconds)
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://myapp-1-zeta.vercel.app/sitemap.xml
