@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, Store } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { SignOutButton } from "~/components/sign-out-button";
 import { ThemeToggle } from "~/components/theme-toggle";
 import { Badge } from "~/components/ui/badge";
@@ -13,10 +13,11 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { authQueryOptions } from "~/lib/auth/queries";
 import { useCartSummary } from "~/lib/cart/queries";
+import Logo from "../../../public/logo.png";
 
 export function SiteHeader() {
   const { data: user } = useQuery(authQueryOptions());
-  const { data: cartSummary } = useCartSummary();
+  const { data: cartSummary } = useCartSummary({ enabled: !!user });
 
   return (
     <header className="border-b">
@@ -26,8 +27,9 @@ export function SiteHeader() {
           to="/"
           className="hover:text-primary flex items-center gap-2 text-xl font-bold"
         >
-          <Store className="h-6 w-6" />
-          <span>Shop</span>
+          {/* <Store className="h-6 w-6" />
+          <span>Shop</span> */}
+          <img src={Logo} alt="Van Nam Phuc Store Logo" className="size-14 object-cover" />
         </Link>
 
         {/* Navigation */}

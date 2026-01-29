@@ -50,8 +50,8 @@ export const useCartItemsSuspense = () => {
   return useSuspenseQuery(createCartItemsQueryOptions());
 };
 
-export const useCartSummary = () => {
-  return useQuery(createCartSummaryQueryOptions());
+export const useCartSummary = (options?: { enabled?: boolean }) => {
+  return useQuery({ ...createCartSummaryQueryOptions(), ...options });
 };
 
 /**
