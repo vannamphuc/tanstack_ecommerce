@@ -12,7 +12,7 @@ import { createProductQueryOptions, useProductSuspense } from "~/lib/products/qu
 export const Route = createFileRoute("/products/$productId")({
   loader: async ({ params, context: { queryClient } }) => {
     try {
-      const product = await queryClient.ensureQueryData(
+      const product = queryClient.prefetchQuery(
         createProductQueryOptions(params.productId),
       );
       return { product };
